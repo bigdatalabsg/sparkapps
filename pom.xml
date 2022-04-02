@@ -2,8 +2,8 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.anrisu</groupId>
   <artifactId>sparkapps</artifactId>
-  <version>1.17</version>
-  <inceptionYear>2021</inceptionYear>
+  <version>2.0.0</version>
+  <inceptionYear>2022</inceptionYear>
   <properties>
     <scala.major.version>2</scala.major.version>
     <scala.minor.version>12</scala.minor.version>
