@@ -4,7 +4,7 @@
   <artifactId>sparkapps</artifactId>
   <version>20231014</version>
   <name>${project.artifactId}</name>
-  <description>spark scala apps</description>
+  <description>spark scala apps on scala 2.13.12 and spark 3.3.1</description>
   <inceptionYear>2023</inceptionYear>
 
   <properties>
