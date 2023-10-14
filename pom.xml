@@ -2,10 +2,10 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.bigdatalabs</groupId>
   <artifactId>sparkapps</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>20231014</version>
   <name>${project.artifactId}</name>
-  <description>My wonderfull scala app</description>
-  <inceptionYear>2018</inceptionYear>
+  <description>spark scala apps</description>
+  <inceptionYear>2023</inceptionYear>
 
   <properties>
     <maven.compiler.source>1.8</maven.compiler.source>
