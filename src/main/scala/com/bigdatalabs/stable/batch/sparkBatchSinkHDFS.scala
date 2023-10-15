@@ -72,14 +72,17 @@ object sparkBatchSinkHDFS {
 
     //Read Header from Schema File
     val _header = spark.read
-      .format("CSV")
+      .format("csv")
       .load(_schemaFile)
       .first()
       .mkString(",")
 
-    //Build Schmema
-    val _schema = StructType(_header.split(",")
-      .map(_colName => StructField(_colName,_inferType(_colName),nullable = true)))
+    //Build Schema
+//    val _schema: StructType = StructType(_header.split(",")
+//      .map(_colName => StructField(_colName,_inferType(_colName),nullable = true)))
+
+    val _schema: StructType = StructType(_header.split(",")
+      .map(_colName => StructField(_colName.substring(0, _colName.indexOf(":")), _inferType(_colName), nullable = true)))
 
     //Schema Names
     val _colNames = _header.split(",")
@@ -91,6 +94,8 @@ object sparkBatchSinkHDFS {
     val _delimiter = _configMap("delimiter")
     val _quoteChar = _configMap("quoteChar")
 
+    try{
+
     val df_raw = spark.read.format(_fileFormat)
       .schema(_schema)
       .option("inferSchema", _inferSchemaFlag)
@@ -100,8 +105,8 @@ object sparkBatchSinkHDFS {
       .load(_srcFile)
       .toDF(_colNames: _*)
 
-    try{
       df_raw.write.format("orc").mode("overwrite").saveAsTable(_dbName + "." + _tgtTblName)
+
     } catch {
       case ex : Exception => System.out.println(ex.printStackTrace())
     } finally {
