@@ -11,7 +11,7 @@ import org.apache.spark.streaming.{Seconds, StreamingContext}
 import java.io.{FileNotFoundException, IOException}
 import scala.io.{BufferedSource, Source}
 
-object sparkKafkaStreamingMicroBatch extends Serializable {
+object sparkStreamingMicroBatch extends Serializable {
 
   def main(args: Array[String]): Unit = {
 
