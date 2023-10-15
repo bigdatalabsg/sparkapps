@@ -1,4 +1,4 @@
-package com.bigdatalabs.stable
+package com.bigdatalabs.stable.utils
 
 import org.apache.spark.sql.SparkSession
 

@@ -1,4 +1,4 @@
-package com.bigdatalabs.stable
+package com.bigdatalabs.stable.batch
 
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.types._
