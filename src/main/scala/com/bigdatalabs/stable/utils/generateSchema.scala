@@ -35,6 +35,7 @@ class generateSchema {
             }
         }
 
+        //Infer Schema, Split the String [<Column Name> : <Data Type> ] at ":"
         def _inferType(field: String) = field.split(":")(1) match {
             case "byte" => ByteType
             case "short" => ShortType
@@ -70,6 +71,7 @@ class generateSchema {
             }
         }
 
+        //Return Struct Type Object
         return _schema
 
     }
