@@ -6,6 +6,8 @@ package com.bigdatalabs.stable.streaming
 * Description: Generic Streaming Data Template for Microbatch
 */
 
+import com.bigdatalabs.stable.utils.generateSchema
+
 import scala.io.{BufferedSource, Source}
 import java.io.{FileNotFoundException, IOException}
 
@@ -42,6 +44,9 @@ object sparkStreamingMicroBatch extends Serializable {
       .appName("kafka stream handler")
       .getOrCreate()
 
+    //Set Logging Level
+    spark.sparkContext.setLogLevel("WARN")
+
     //Fetch Property File Path from Input Parameter
     val _prop_file_path = args(0)
 
@@ -54,8 +59,14 @@ object sparkStreamingMicroBatch extends Serializable {
       _configFile = Source.fromFile(_prop_file_path)
 
     } catch {
-      case ex: FileNotFoundException => println(ex.printStackTrace())
-      case ex: IOException => println(ex.printStackTrace())
+      case ex: FileNotFoundException => {
+        println(ex.printStackTrace())
+        System.exit(1)
+      }
+      case ex: IOException => {
+        println(ex.printStackTrace())
+        System.exit(2)
+      }
     }
 
     //Read Application Config
@@ -68,6 +79,7 @@ object sparkStreamingMicroBatch extends Serializable {
       }
     }.toMap
 
+    //Initialize Variables
     _brokers=_configMap("brokers")
     _subsTopic=_configMap("subsTopic")
     _msgSchemaFile=_configMap("msgSchemaFile")
@@ -80,11 +92,7 @@ object sparkStreamingMicroBatch extends Serializable {
 
     //WHY?
     val topicsSet = _subsTopic.split(",").toSet
-
-    //Set Logging Level
-    spark.sparkContext.setLogLevel("WARN")
-
-    //Set Streaming Context
+    //Set Streaming Context and Latency
     val ssc = new StreamingContext(spark.sparkContext, Seconds(_microbatchSecs))
 
     //Kafka Params
@@ -99,46 +107,32 @@ object sparkStreamingMicroBatch extends Serializable {
     val _readStream = KafkaUtils.createDirectStream[String, String](ssc,LocationStrategies.PreferConsistent,
       ConsumerStrategies.Subscribe[String, String](topicsSet, kafkaParams))
 
-    def _inferType(field: String) = field.split(":")(1) match {
-      case "byte" => ByteType
-      case "short" => ShortType
-      case "integer" => IntegerType
-      case "long" => LongType
-      case "float" => FloatType
-      case "double" => DoubleType
-      //case "decimal" => java.math.BigDecimal
-      case "string" => StringType
-      case "binary" => BinaryType
-      case "boolean" => BooleanType
-      case "timestamp" => TimestampType
-      case "date" => DateType
-      case _ => StringType
+    //Generate Schema from Schema Generation Class
+    val _msgSchema: StructType = new generateSchema().getStruct(_msgSchemaFile)
+
+    if(_msgSchema == null) {
+      System.out.println("Bad Schema - Exiting")
+            System.exit(3)
     }
-
-    //Read Header from Schema File
-    val _header = spark.read
-      .format("csv")
-      .load(_msgSchemaFile)
-      .first()
-      .mkString(",")
-
-    //Build Schema Dynamically from Schema File
-    val _msgSchema: StructType = StructType(_header.split(",")
-      .map(_colName => StructField(_colName.substring(0, _colName.indexOf(":")), _inferType(_colName), nullable = true)))
 
     try{
       //Read the Value Pair, Ignore Key
       val _processStream = _readStream.map(line => line.value)
-
       //Process Record
       _processStream.foreachRDD(
         _rddRecord => {
+
           import spark.implicits._
+
           val _rawDF = _rddRecord.toDF("results")
+
           val df_results = _rawDF.select(from_json($"results",_msgSchema) as "data").select("data.*")
+
           df_results.cache()
+
           //df_results.printSchema()
           print(df_results.show(false))
+
         })
 
       // Start the computation
