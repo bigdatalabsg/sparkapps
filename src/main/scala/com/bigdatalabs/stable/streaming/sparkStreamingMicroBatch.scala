@@ -45,7 +45,7 @@ object sparkStreamingMicroBatch extends Serializable {
     //Fetch Property File Path from Input Parameter
     val _prop_file_path = args(0)
 
-    //Check for Propoerties File
+    //Check for Properties File
     try {
       print("=======================================================================\n")
       println("RESOURCE FILE:" + _prop_file_path)
@@ -60,11 +60,11 @@ object sparkStreamingMicroBatch extends Serializable {
 
     //Read Application Config
     val _configMap = _configFile.getLines().filter(line => line.contains("=")).map { line =>
-      val tkns = line.split("=")
-      if (tkns.size == 1) {
-        tkns(0) -> ""
+      val _configTokens = line.split("=")
+      if (_configTokens.size == 1) {
+        _configTokens(0) -> ""
       } else {
-        tkns(0) -> tkns(1)
+        _configTokens(0) -> _configTokens(1)
       }
     }.toMap
 
@@ -122,7 +122,7 @@ object sparkStreamingMicroBatch extends Serializable {
       .first()
       .mkString(",")
 
-    //Build Schmema Dyanmically from Schema File
+    //Build Schema Dynamically from Schema File
     val _msgSchema: StructType = StructType(_header.split(",")
       .map(_colName => StructField(_colName.substring(0, _colName.indexOf(":")), _inferType(_colName), nullable = true)))
 

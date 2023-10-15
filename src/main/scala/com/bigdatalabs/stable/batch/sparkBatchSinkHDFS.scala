@@ -41,11 +41,11 @@ object sparkBatchSinkHDFS {
     val _configFile = Source.fromFile(_prop_file_path)
 
     val _configMap = _configFile.getLines().filter(line => line.contains("=")).map { line =>
-      val tkns = line.split("=")
-      if (tkns.size == 1) {
-        tkns(0) -> ""
+      val _configTokens = line.split("=")
+      if (_configTokens.size == 1) {
+        _configTokens(0) -> ""
       } else {
-        tkns(0) -> tkns(1)
+        _configTokens(0) -> _configTokens(1)
       }
     }.toMap
 
@@ -78,9 +78,6 @@ object sparkBatchSinkHDFS {
       .mkString(",")
 
     //Build Schema
-//    val _schema: StructType = StructType(_header.split(",")
-//      .map(_colName => StructField(_colName,_inferType(_colName),nullable = true)))
-
     val _schema: StructType = StructType(_header.split(",")
       .map(_colName => StructField(_colName.substring(0, _colName.indexOf(":")), _inferType(_colName), nullable = true)))
 
