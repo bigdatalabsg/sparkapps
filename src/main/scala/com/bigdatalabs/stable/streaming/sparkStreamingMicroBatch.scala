@@ -1,15 +1,22 @@
 package com.bigdatalabs.stable.streaming
 
-import org.apache.kafka.clients.consumer.ConsumerConfig
-import org.apache.kafka.common.serialization.StringDeserializer
+/*
+* Author : Anand
+* Date : 15-Oct-2023
+* Description: Generic Streaming Data Template for Microbatch
+*/
+
+import scala.io.{BufferedSource, Source}
+import java.io.{FileNotFoundException, IOException}
+
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types._
+
+import org.apache.kafka.clients.consumer.ConsumerConfig
+import org.apache.kafka.common.serialization.StringDeserializer
 import org.apache.spark.streaming.kafka010.{ConsumerStrategies, KafkaUtils, LocationStrategies}
 import org.apache.spark.streaming.{Seconds, StreamingContext}
-
-import java.io.{FileNotFoundException, IOException}
-import scala.io.{BufferedSource, Source}
 
 object sparkStreamingMicroBatch extends Serializable {
 
@@ -49,8 +56,6 @@ object sparkStreamingMicroBatch extends Serializable {
     } catch {
       case ex: FileNotFoundException => println(ex.printStackTrace())
       case ex: IOException => println(ex.printStackTrace())
-    } finally {
-
     }
 
     //Read Application Config
@@ -130,12 +135,10 @@ object sparkStreamingMicroBatch extends Serializable {
         _rddRecord => {
           import spark.implicits._
           val _rawDF = _rddRecord.toDF("results")
-          val df_Trade = _rawDF.select(from_json($"results",_msgSchema) as "data").select("data.*")
-          //val df_Trade = _rawDF.select(from_json($"results", _msgSchema) as "data").select("data.*")
-          //df_Trade.cache()
-          df_Trade.printSchema()
-          //val df_agg = df_Trade.groupBy("symbol").agg(avg($"volume").alias("avg_vol"))
-          print(df_Trade.show(false))
+          val df_results = _rawDF.select(from_json($"results",_msgSchema) as "data").select("data.*")
+          df_results.cache()
+          //df_results.printSchema()
+          print(df_results.show(false))
         })
 
       // Start the computation
