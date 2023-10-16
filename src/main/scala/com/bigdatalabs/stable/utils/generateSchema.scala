@@ -22,7 +22,7 @@ class generateSchema {
         //Check for Propoerties File
         try {
             print("=======================================================================\n")
-            println("RESOURCE FILE:" + _schemaFile)
+            println("SCHEMA FILE:" + _schemaFile)
             print("=======================================================================\n")
         } catch {
             case ex: FileNotFoundException => {
