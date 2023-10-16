@@ -16,3 +16,9 @@ _examples: <dbName> <Prepared SQL>_
  
 
 3. sparkStreamingMicroBatch.scala - Generic Module for Reading a Kafka Stream and Apply Schema
+
+
+4. sparkStreamingAvroProducer.scala - JSON to AVRO Producer
+
+
+5. sparkStreamingAvroConsumer.scala - AVRO Consumer
