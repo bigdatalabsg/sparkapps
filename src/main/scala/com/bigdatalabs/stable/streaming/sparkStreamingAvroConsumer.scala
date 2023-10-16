@@ -1,3 +1,9 @@
+/*
+* Author : Anand
+* Date : 17-Oct-2023
+* Description: Structured Streaming AVRO Consumer
+*/
+
 package com.bigdatalabs.stable.streaming
 
 import org.apache.spark.sql.SparkSession
