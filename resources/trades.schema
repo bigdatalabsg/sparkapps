@@ -1,0 +1,1 @@
+xchange:string,symbol:string,trdate:string,open:float,high:float,low:float,close:float,volume:integer,adj_close:float

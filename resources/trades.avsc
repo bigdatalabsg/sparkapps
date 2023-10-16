@@ -1,0 +1,16 @@
+{
+  "type": "record",
+  "name": "trade",
+  "namespace": "com.bigdatalabs",
+  "fields": [
+    {"name": "xchange","type": ["string","null"]},
+    {"name": "symbol","type": ["string","null"]},
+    {"name": "trdate","type": ["string","null"]},
+    {"name": "high","type": ["float","null"]},
+    {"name": "open","type": ["float","null"]},
+    {"name": "close","type": ["float","null"]},
+    {"name": "low","type": ["float","null"]},
+    {"name": "volume","type": ["int","null"]},
+    {"name": "adj_close","type": ["float","null"]}
+  ]
+}
