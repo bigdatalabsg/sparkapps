@@ -121,18 +121,13 @@ object sparkStreamingMicroBatch extends Serializable {
             //Process Record
             _processStream.foreachRDD(
                 _rddRecord => {
-
                     import spark.implicits._
 
                     val _rawDF = _rddRecord.toDF("results")
-
                     val df_results = _rawDF.select(from_json($"results", _msgSchema) as "data").select("data.*")
-
                     df_results.cache()
-
                     //df_results.printSchema()
                     print(df_results.show(false))
-
                 })
 
             // Start the computation

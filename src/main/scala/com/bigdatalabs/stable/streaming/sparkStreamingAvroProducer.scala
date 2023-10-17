@@ -101,6 +101,14 @@ object sparkStreamingAvroProducer {
         System.out.println("delimiterChar :" + _delimiterChar)
         System.out.println("quoteChar :" + _quoteChar)
 
+        //Generate Schema
+        val _srcSchema: StructType = new generateSchema().getStruct(_srcSchemaFile)
+
+        if (_srcSchema == null) {
+            System.out.println("Bad Schema - Exiting")
+            System.exit(3)
+        }
+
         //Read from JSON Message Stream
         val df_stream = spark
           .readStream
@@ -115,20 +123,6 @@ object sparkStreamingAvroProducer {
         //Extract Value from Kafka Key Value and cast to String
         val df_value = df_stream.selectExpr("CAST(value AS STRING)")
 
-        //Generate Schema
-        val _srcSchema: StructType = new generateSchema().getStruct(_srcSchemaFile)
-
-        if (_srcSchema == null) {
-            System.out.println("Bad Schema - Exiting")
-            System.exit(3)
-        }
-
-        //Test for Schema
-        if (_srcSchema == null) {
-            System.out.println("Bad Schema - Exiting")
-            System.exit(3)
-        }
-
         //Apply Schema and Resolve to columns
         val df_subs = df_value.select(
             from_json(
@@ -138,15 +132,6 @@ object sparkStreamingAvroProducer {
 
         //inspect Schema
         //df_subs.printSchema()
-
-        //Convert to AVRO
-//        val df_avro1= df_subs.select(
-//            to_avro(
-//                struct(
-//                    df_subs.columns.map(column):_*
-//                )
-//            ) as "value"
-//        )
 
         //Convert to Avro
         val df_avro = df_subs.select(
