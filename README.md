@@ -28,11 +28,11 @@ _examples: <dbName> <Prepared SQL>_
 
 
 
-**6. sparkBatchIcebergSink.scala - Batch Ingestion for Iceberg Non Partitioned Tables with Dynamic Schema**
+**6. sparkBatchIcebergSink.scala - Batch Ingestion for Iceberg Non Partitioned Tables**
 
 
 
-**7. sparkBatchWithPartitionIcebergSink - Batch Ingestion for Iceberg Partitioned Tables with Dynamic Schema**
+**7. sparkBatchWithPartitionIcebergSink - Batch Ingestion for Iceberg Partitioned Tables**
 
 
 
