@@ -55,19 +55,19 @@ object sparkStreamingAvroProducer {
             _configFile = Source.fromFile(_prop_file_path)
 
         } catch {
-            case ex: FileNotFoundException => {
+            case ex: FileNotFoundException =>
                 println(ex.printStackTrace())
                 System.exit(1)
-            }
-            case ex: IOException => {
+
+            case ex: IOException =>
                 println(ex.printStackTrace())
                 System.exit(2)
-            }
+
         }
 
         //Read Application Config
-        val _configMap = _configFile.getLines().filter(line => line.contains("=")).map { line =>
-            val _configTokens = line.split("=")
+        val _configMap = _configFile.getLines().filter(line => line.contains("::")).map { line =>
+            val _configTokens = line.split("::")
             if (_configTokens.size == 1) {
                 _configTokens(0) -> ""
             } else {
@@ -117,6 +117,11 @@ object sparkStreamingAvroProducer {
 
         //Generate Schema
         val _srcSchema: StructType = new generateSchema().getStruct(_srcSchemaFile)
+
+        if (_srcSchema == null) {
+            System.out.println("Bad Schema - Exiting")
+            System.exit(3)
+        }
 
         //Test for Schema
         if (_srcSchema == null) {

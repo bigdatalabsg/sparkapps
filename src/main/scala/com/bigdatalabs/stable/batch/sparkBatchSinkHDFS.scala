@@ -41,18 +41,18 @@ object sparkBatchSinkHDFS {
             _configFile = Source.fromFile(_prop_file_path)
 
         } catch {
-            case ex: FileNotFoundException => {
+            case ex: FileNotFoundException =>
                 println(ex.printStackTrace())
                 System.exit(1)
-            }
-            case ex: IOException => {
+
+            case ex: IOException =>
                 println(ex.printStackTrace())
                 System.exit(2)
-            }
+
         }
 
-        val _configMap = _configFile.getLines().filter(line => line.contains("=")).map { line =>
-            val _configTokens = line.split("=")
+        val _configMap = _configFile.getLines().filter(line => line.contains("::")).map { line =>
+            val _configTokens = line.split("::")
             if (_configTokens.size == 1) {
                 _configTokens(0) -> ""
             } else {
@@ -106,10 +106,10 @@ object sparkBatchSinkHDFS {
               .saveAsTable(_dbName + "." + _tgtTblName)
 
         } catch {
-            case ex: Exception => {
+            case ex: Exception =>
                 System.out.println(ex.printStackTrace())
                 System.exit(2)
-            }
+
         } finally {
             spark.stop()
         }
