@@ -25,14 +25,13 @@ class generateSchema {
             println("SCHEMA FILE:" + _schemaFile)
             print("=======================================================================\n")
         } catch {
-            case ex: FileNotFoundException => {
+            case ex: FileNotFoundException =>
                 println(ex.printStackTrace())
                 System.exit(1)
-            }
-            case ex: IOException => {
+
+            case ex: IOException =>
                 println(ex.printStackTrace())
                 System.exit(2)
-            }
         }
 
         //Infer Schema, Split the String [<Column Name> : <Data Type> ] at ":"
@@ -56,7 +55,7 @@ class generateSchema {
             //Read Header from Schema File
             val _header = spark.read
               .format("csv")
-              .load(_schemaFile.toString)
+              .load(_schemaFile)
               .first()
               .mkString(",")
 
@@ -64,11 +63,14 @@ class generateSchema {
             _schema = StructType(_header.split(",")
               .map(_colName => StructField(_colName.substring(0, _colName.indexOf(":")), _inferType(_colName), nullable = true)))
 
+            //Schema Names
+//            val _colNames = _header.split(",")
+//              .map(colName => colName.substring(0, colName.indexOf(":")).toUpperCase()).toSeq
+
         } catch {
-            case ex: Exception => {
+            case ex: Exception =>
                 System.out.println(ex.printStackTrace())
                 System.exit(2)
-            }
         }
 
         //Return Struct Type Object
