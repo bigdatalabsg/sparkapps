@@ -12,19 +12,32 @@ _examples: <dbName> <Prepared SQL>_
 * _"stocks" "select * from t_trades limit 10"_
 * _"default" "select * from stocks.t_trades limit 10"_
 
-**2. sparkBatchSinkHDFS.scala - Raw CSV File to HDFS in ORC Format**
+**2. sparkBatchSinkHDFS.scala - Batch Ingest CSV File to Hive in ORC Format**
  
 
-**3. sparkStreamingMicroBatch.scala - Generic Module for Reading a Kafka Stream and Apply Schema**
+
+**3. sparkStreamingMicroBatch.scala - Spark Streaming with Dynamic Schema**  
 
 
-**4. sparkStreamingAvroProducer.scala - JSON to AVRO Producer**
+
+**4. sparkStreamingAvroProducer.scala - JSON to AVRO Producer with Dynamic Schema**
 
 
-**5. sparkStreamingAvroConsumer.scala - AVRO Consumer**
+
+**5. sparkStreamingAvroConsumer.scala - Kafka Consumer for Avro with Dynamic Schema**
 
 
-**6. sparkBatchIcebergSink.scala - Iceberg Ingestion for Non Partitioned Tables**
+
+**6. sparkBatchIcebergSink.scala - Batch Ingestion for Iceberg Non Partitioned Tables with Dynamic Schema**
 
 
-**7. sparkBatchWithPartitionIcebergSink - Iceberg Ingestion for Partitioned Tables**
+
+**7. sparkBatchWithPartitionIcebergSink - Batch Ingestion for Iceberg Partitioned Tables with Dynamic Schema**
+
+
+
+**8. sparkStreamIcebergSink.scala - Streaming Ingestion for Iceberg Non Partitioned Tables with Dynamic Schema**
+
+
+
+**9. sparkStreamPartitionIcebergSink.scala - Streaming Ingestion for Iceberg Partitioned Tables with Dynamic Schema**
