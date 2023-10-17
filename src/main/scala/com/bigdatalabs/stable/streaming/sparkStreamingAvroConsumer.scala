@@ -106,7 +106,7 @@ object sparkStreamingAvroConsumer {
         val df_stream = spark
           .readStream
           .format("kafka")
-          .option("kafka.bootstrap.servers", "localhost:9092")
+          .option("kafka.bootstrap.servers", _brokers)
           .option("subscribe", _subsTopic)
           .option("startingOffsets", _offSet) // From starting
           .load()
