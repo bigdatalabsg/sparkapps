@@ -12,13 +12,19 @@ _examples: <dbName> <Prepared SQL>_
 * _"stocks" "select * from t_trades limit 10"_
 * _"default" "select * from stocks.t_trades limit 10"_
 
-2. sparkBatchSinkHDFS.scala - Raw CSV File to HDFS in ORC Format
+**2. sparkBatchSinkHDFS.scala - Raw CSV File to HDFS in ORC Format**
  
 
-3. sparkStreamingMicroBatch.scala - Generic Module for Reading a Kafka Stream and Apply Schema
+**3. sparkStreamingMicroBatch.scala - Generic Module for Reading a Kafka Stream and Apply Schema**
 
 
-4. sparkStreamingAvroProducer.scala - JSON to AVRO Producer
+**4. sparkStreamingAvroProducer.scala - JSON to AVRO Producer**
 
 
-5. sparkStreamingAvroConsumer.scala - AVRO Consumer
+**5. sparkStreamingAvroConsumer.scala - AVRO Consumer**
+
+
+**6. sparkBatchIcebergSink.scala**
+
+
+**7. sparkBatchWithPartitionIcebergSink**
