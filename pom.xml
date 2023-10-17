@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.bigdatalabs</groupId>
   <artifactId>sparkapps</artifactId>
-  <version>20231015</version>
+  <version>20231017</version>
   <name>${project.artifactId}</name>
   <description>spark scala apps on scala 2.12.15 and spark 3.3.1</description>
   <inceptionYear>2023</inceptionYear>
@@ -18,6 +18,7 @@
     <scala.binary.version>2.12</scala.binary.version>
     <scala.version>2.12.15</scala.version>
     <spark.version>3.3.1</spark.version>
+    <iceberg.version>1.4.0</iceberg.version>
   </properties>
 
   <dependencies>
@@ -89,7 +90,14 @@
     <dependency>
       <groupId>org.apache.iceberg</groupId>
       <artifactId>iceberg-spark-runtime-3.3_2.12</artifactId>
-      <version>1.4.0</version>
+      <version>${iceberg.version}</version>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/org.apache.iceberg/iceberg-core -->
+    <dependency>
+      <groupId>org.apache.iceberg</groupId>
+      <artifactId>iceberg-core</artifactId>
+      <version>${iceberg.version}</version>
     </dependency>
 
   </dependencies>
