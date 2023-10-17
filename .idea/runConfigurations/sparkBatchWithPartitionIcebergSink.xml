@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="sparkBatchWithPartitionIcebergSink" type="Application" factoryName="Application">
+    <option name="INCLUDE_PROVIDED_SCOPE" value="true" />
+    <option name="MAIN_CLASS_NAME" value="com.bigdatalabs.stable.batch.sparkBatchWithPartitionIcebergSink" />
+    <module name="sparkapps" />
+    <option name="PROGRAM_PARAMETERS" value="$PROJECT_DIR$/configs/sparkBatchIcebergSink.cfg" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
