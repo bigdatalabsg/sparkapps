@@ -24,7 +24,7 @@ _examples: <dbName> <Prepared SQL>_
 **5. sparkStreamingAvroConsumer.scala - AVRO Consumer**
 
 
-**6. sparkBatchIcebergSink.scala**
+**6. sparkBatchIcebergSink.scala - Iceberg Ingestion for Non Partitioned Tables**
 
 
-**7. sparkBatchWithPartitionIcebergSink**
+**7. sparkBatchWithPartitionIcebergSink - Iceberg Ingestion for Partitioned Tables**
