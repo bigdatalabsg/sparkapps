@@ -23,7 +23,7 @@ object sparkBatchIcebergSink {
         var _delimiter: String = null
         var _quoteChar: String = null
 
-	var _dbName: String = null
+        var _dbName: String = null
         var _tgtTblName: String = null
         var _partitionCol: String = null
 
@@ -132,7 +132,7 @@ object sparkBatchIcebergSink {
             println(s"Start Loading Iceberg")
             //Append new Data
             df_station
-//              .sortWithinPartitions("station")
+              //              .sortWithinPartitions("station")
               .writeTo(_dbName + "." + _tgtTblName)
               .append()
 
