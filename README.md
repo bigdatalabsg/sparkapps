@@ -20,11 +20,11 @@ _examples: <dbName> <Prepared SQL>_
 
 
 
-**4. sparkStreamingAvroProducer.scala - JSON to AVRO Producer with Dynamic Schema**
+**4. sparkStreamingAvroProducer.scala - Spark Kafka Producer with Dynamic Schema**
 
 
 
-**5. sparkStreamingAvroConsumer.scala - Kafka Consumer for Avro with Dynamic Schema**
+**5. sparkStreamingAvroConsumer.scala - Spark Kafka Consumer for Avro with Dynamic Schema**
 
 
 
