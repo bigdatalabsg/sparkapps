@@ -36,8 +36,8 @@ _examples: <dbName> <Prepared SQL>_
 
 
 
-**8. sparkStreamIcebergSink.scala - Streaming Ingestion for Iceberg Non Partitioned Tables with Dynamic Schema**
+**8. sparkStreamIcebergSink.scala - Streaming Ingestion for Iceberg Non Partitioned Tables**
 
 
 
-**9. sparkStreamPartitionIcebergSink.scala - Streaming Ingestion for Iceberg Partitioned Tables with Dynamic Schema**
+**9. sparkStreamPartitionIcebergSink.scala - Streaming Ingestion for Iceberg Partitioned Tables**
