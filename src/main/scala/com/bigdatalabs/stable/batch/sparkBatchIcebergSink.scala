@@ -1,3 +1,9 @@
+/*
+* Author : Anand
+* Date : 17-Oct-2023
+* Description: Structured Streaming Sink for Iceberg
+*/
+
 package com.bigdatalabs.stable.batch
 
 import com.bigdatalabs.stable.utils.generateSchema
