@@ -1,7 +1,7 @@
 /*
 * Author : Anand
 * Date : 17-Oct-2023
-* Description: Structured Streaming Sink for Iceberg
+* Description: Spark Batch Sink for Iceberg
 */
 
 package com.bigdatalabs.stable.batch
