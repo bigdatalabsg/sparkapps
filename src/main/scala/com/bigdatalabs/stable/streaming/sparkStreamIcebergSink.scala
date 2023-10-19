@@ -1,3 +1,11 @@
+/*
+
+Author : Anand
+Description : Streaming Data Sink for Iceberg
+Date : 17/10/2023
+
+*/
+
 package com.bigdatalabs.stable.streaming
 
 import com.bigdatalabs.stable.utils.generateSchema
