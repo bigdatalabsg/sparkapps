@@ -52,6 +52,8 @@ object sparkStreamingMicroBatch extends Serializable {
 
         //Check for Properties File
         try {
+            println("=======================================================================\n")
+            println("SPARK SERVICE NAME:" + this.getClass.getName.toUpperCase())
             print("=======================================================================\n")
             println("RESOURCE FILE:" + _prop_file_path)
             print("=======================================================================\n")
@@ -91,7 +93,7 @@ object sparkStreamingMicroBatch extends Serializable {
         _quoteChar = _configMap("quoteChar")
 
         //WHY?
-        val topicsSet = _subsTopic.split(",").toSet
+        val topicsSet : Set[String] = _subsTopic.split(",").toSet
         //Set Streaming Context and Latency
         val ssc = new StreamingContext(spark.sparkContext, Seconds(_microbatchSecs))
 
