@@ -34,6 +34,8 @@ object sparkBatchSinkHDFS {
 
         //Check for Properties File
         try {
+            println("=======================================================================\n")
+            println("SPARK SERVICE NAME:" + this.getClass.getName.toUpperCase())
             print("=======================================================================\n")
             println("RESOURCE FILE:" + _prop_file_path)
             print("=======================================================================\n")
