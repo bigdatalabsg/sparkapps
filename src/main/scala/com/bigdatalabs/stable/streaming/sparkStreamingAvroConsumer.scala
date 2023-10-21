@@ -48,6 +48,8 @@ object sparkStreamingAvroConsumer {
 
         //Check for Properties File
         try {
+            println("=======================================================================\n")
+            println("SPARK SERVICE NAME:" + this.getClass.getName.toUpperCase())
             print("=======================================================================\n")
             println("RESOURCE FILE:" + _prop_file_path)
             print("=======================================================================\n")
@@ -114,9 +116,11 @@ object sparkStreamingAvroConsumer {
         //Inspect Schema
         //df_stream.printSchema()
 
+        //Pull Schema
         val _avroSchema = new String(
             Files.readAllBytes(Paths.get(_avroSchemaFile)))
 
+        //
         val df_from_avro = df_stream.select(
             from_avro(col("value"),_avroSchema).alias("data")
         ).select("data.*")
