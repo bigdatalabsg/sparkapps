@@ -7,7 +7,7 @@
 package com.bigdatalabs.stable.utils
 import org.apache.spark.sql.SparkSession
 
-object sparkExecuteSQLStatement{
+object sparkExecuteSQL{
   def main (args: Array[String]): Unit= {
 
     var _dbName: String = null
@@ -46,7 +46,7 @@ object sparkExecuteSQLStatement{
       //Execute SQL
       val df = spark.sql(_SQL)
       //Display
-      df.show(false)
+      df.show(truncate = false)
 
       println("Done")
 

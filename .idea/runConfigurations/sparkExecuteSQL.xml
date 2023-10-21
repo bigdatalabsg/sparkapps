@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="sparkExecuteSQL" type="Application" factoryName="Application">
+    <option name="INCLUDE_PROVIDED_SCOPE" value="true" />
+    <option name="MAIN_CLASS_NAME" value="com.bigdatalabs.stable.utils.sparkExecuteSQL" />
+    <module name="sparkapps" />
+    <option name="PROGRAM_PARAMETERS" value="&quot;default&quot; &quot;show databases&quot;" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

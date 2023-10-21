@@ -2,7 +2,7 @@
 
 **Spark Scala Applications on Scala 2.13.12 and Spark 3.3.1**
 
-**1. sparkExecuteSQLStatement.scala - Simple Spark SQL Executor**
+**1. sparkExecuteSQL.scala - Simple Spark SQL Executor**
 
 _Usage : spark-submit --class com.bigdatalabs.stable.util.sparkExecuteSQLStatement sparkapps-.jar <dbName> <Prepared SQL>_
 
