@@ -27,6 +27,7 @@ object sparkStreamingAvroProducer {
         var _avroSchemaFile: String = null
         var _tgtSchemaFile: String = null
         var _pubsTopic: String = null
+        var _offSet: String = null
         var _groupId: String = null
         var _microbatchSecs: Int = 0
         var _streamFormat: String = null
@@ -36,8 +37,8 @@ object sparkStreamingAvroProducer {
 
         //Spark Context
         val spark = SparkSession.builder()
-          .master("local[*]")
-          .appName("spark structured streaming")
+          .master(master = "local[*]")
+          .appName(name = "spark structured streaming")
           .getOrCreate()
 
         //Set Logging Level
@@ -48,6 +49,8 @@ object sparkStreamingAvroProducer {
 
         //Check for Properties File
         try {
+            print("=======================================================================\n")
+            println("SPARK SERVICE NAME:" + this.getClass.getName.toUpperCase())
             print("=======================================================================\n")
             println("RESOURCE FILE:" + _prop_file_path)
             print("=======================================================================\n")
@@ -82,6 +85,7 @@ object sparkStreamingAvroProducer {
         _avroSchemaFile = _configMap("avroSchemaFile")
         _tgtSchemaFile = _configMap("tgtSchemaFile")
         _pubsTopic = _configMap("pubsTopic")
+        _offSet = _configMap("offSet")
         _streamFormat = _configMap("fileFormat")
         _groupId = _configMap("groupId")
         _microbatchSecs = _configMap("microbatchSecs").toInt
@@ -89,23 +93,24 @@ object sparkStreamingAvroProducer {
         _delimiterChar = _configMap("delimiterChar")
         _quoteChar = _configMap("quoteChar")
 
-        System.out.println("brokers :" + _brokers)
-        System.out.println("subsTopic :" + _subsTopic)
-        System.out.println("srcSchemaFile :" + _srcSchemaFile)
-        System.out.println("avroSchemaFile :" + _avroSchemaFile)
-        System.out.println("tgtSchemaFile :" + _tgtSchemaFile)
-        System.out.println("pubsTopic :" + _pubsTopic)
-        System.out.println("groupId :" + _groupId)
-        System.out.println("microbatchSecs :" + _microbatchSecs)
-        System.out.println("lineSplitterChar :" + _lineSplitterChar)
-        System.out.println("delimiterChar :" + _delimiterChar)
-        System.out.println("quoteChar :" + _quoteChar)
+        println("brokers ::" + _brokers)
+        println("subsTopic ::" + _subsTopic)
+        println("srcSchemaFile ::" + _srcSchemaFile)
+        println("avroSchemaFile ::" + _avroSchemaFile)
+        println("tgtSchemaFile ::" + _tgtSchemaFile)
+        println("pubsTopic ::" + _pubsTopic)
+        println("offSet ::" + _offSet)
+        println("groupId ::" + _groupId)
+        println("microbatchSecs ::" + _microbatchSecs)
+        println("lineSplitterChar ::" + _lineSplitterChar)
+        println("delimiterChar ::" + _delimiterChar)
+        println("quoteChar ::" + _quoteChar)
 
         //Generate Schema
         val _srcSchema: StructType = new generateSchema().getStruct(_srcSchemaFile)
 
         if (_srcSchema == null) {
-            System.out.println("Bad Schema - Exiting")
+            println("Bad Schema - Exiting")
             System.exit(3)
         }
 
@@ -115,7 +120,7 @@ object sparkStreamingAvroProducer {
           .format("kafka")
           .option("kafka.bootstrap.servers", _brokers)
           .option("subscribe", _subsTopic)
-          .option("startingOffsets", "latest") // From starting
+          .option("startingOffsets", _offSet) // From starting
           .option("mode", "PERMISSIVE")
           //.option("failOnDataLoss", "false")
           .load()
@@ -126,8 +131,8 @@ object sparkStreamingAvroProducer {
         //Apply Schema and Resolve to columns
         val df_subs = df_value.select(
             from_json(
-                col("value"), _srcSchema
-            ).as("data")
+                col(colName = "value"), _srcSchema
+            ).as(alias = "data")
         )
 
         //inspect Schema
@@ -136,29 +141,43 @@ object sparkStreamingAvroProducer {
         //Convert to Avro
         val df_avro = df_subs.select(
             to_avro(
-                struct("data.*")
+                struct(colName = "data.*")
             ) as "value"
         )
 
         //df_avro.printSchema()
 
-        //Publish to avro source
-        df_avro.writeStream
-          .format("kafka")
-          .option("kafka.bootstrap.servers", _brokers)
-          .option("topic", _pubsTopic)
-          .outputMode("append")
-          .option("checkpointLocation", "/tmp/spark_kafka_chkpnt/" + this.getClass.getName + System.currentTimeMillis()/1000 + "/new")
-          //.option("failOnDataLoss", "false")
-          .start()
-          .awaitTermination()
+        val _checkPointLocation = "/tmp/spark_kafka_chkpnt/" +
+          "streaming/" + this.getClass.getName + (System.currentTimeMillis() / 1000)
 
-//        df_avro.writeStream
-//          .format("console")
-//          .outputMode("append")
-//          .option("truncate", false)
-//          .start
-//          .awaitTermination()
+        try {
+            //Publish to avro source
+            df_avro.writeStream
+              .format(source = "kafka")
+              .option("kafka.bootstrap.servers", _brokers)
+              .option("topic", _pubsTopic)
+              .outputMode(outputMode = "append")
+              .option("checkpointLocation", _checkPointLocation)
+              //.option("failOnDataLoss", "false")
+              .start()
+              .awaitTermination()
+
+            //// For Debug
+            /*
+            df_avro.writeStream
+              .format("console")
+              .outputMode("append")
+              .option("truncate", false)
+              .start
+              .awaitTermination()
+            */
+
+        } catch {
+            case ex: Exception =>
+                println(ex.printStackTrace())
+        } finally {
+            spark.stop()
+        }
+
     }
-
 }
