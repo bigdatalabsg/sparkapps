@@ -1,5 +1,11 @@
 package com.bigdatalabs.stable.streaming
 
+/*
+* Author : Anand
+* Date : 17-Oct-2023
+* Description: Structured Streaming AVRO Consumer
+*/
+
 import com.bigdatalabs.stable.utils.generateSchema
 import org.apache.spark.sql._
 import org.apache.spark.sql.functions._
@@ -21,7 +27,7 @@ object sparkStreamPartitionIcebergSink {
         var _subsTopic: String = null
         var _srcSchemaFile: String = null
         var _offSet: String = null
-        var _triggerMinutes: Int = 0
+        var _triggerDurationMinutes: Int = 0
 
         var _dbName: String = null
         var _tgtTblName: String = null
@@ -43,9 +49,10 @@ object sparkStreamPartitionIcebergSink {
 
         //Check for Properties File
         try {
+            println("=======================================================================\n")
+            println("SPARK SERVICE NAME:" + this.getClass.getName.toUpperCase())
             print("=======================================================================\n")
             println("RESOURCE FILE:" + _prop_file_path)
-            print("=======================================================================\n")
 
             _configFile = Source.fromFile(_prop_file_path)
 
@@ -73,19 +80,32 @@ object sparkStreamPartitionIcebergSink {
         _brokers = _configMap("brokers")
         _subsTopic = _configMap("subsTopic")
         _offSet = _configMap("offSet")
-        _srcSchemaFile = _configMap("srcSchemaFile")
+        _triggerDurationMinutes = _configMap("triggerDurationMinutes").toInt
 
+        _srcSchemaFile = _configMap("srcSchemaFile")
         _dbName = _configMap("dbName")
         _tgtTblName = _configMap("tgtTblName")
-        //_partitionCol = _configMap("partitionCol")
+        _partitionCol = _configMap("partitionCol")
 
+        print("SERVICE PARAMETERS==================================================\n")
+        println("brokers :" + _brokers)
+        println("subsTopic :" + _subsTopic)
+        println("offSet :" + _offSet)
+        println("trigger Duration :" + _triggerDurationMinutes + " Minutes")
+
+        println("srcSchemaFile :" + _srcSchemaFile)
+        println("dbName :" + _dbName)
+        println("tgtTblName :" + _tgtTblName)
+        println("partitionCol :" + _partitionCol)
+
+        print("====================================================================\n")
 
         //Generate Schema
         val _msgSchema: StructType = new generateSchema().getStruct(_srcSchemaFile)
 
         if (_msgSchema == null) {
-            System.out.println("Undefined Schema - Exiting")
-            System.exit(3)
+            println("Undefined Schema - Exiting")
+            System.exit(4)
         }
 
         try {
@@ -110,16 +130,15 @@ object sparkStreamPartitionIcebergSink {
             df_tgt.writeStream
               .format("iceberg")
               .outputMode("append")
-              .trigger(Trigger.ProcessingTime(_triggerMinutes, TimeUnit.MINUTES))
-              .option("fanout-enabled", "true")
+              .trigger(Trigger.ProcessingTime(_triggerDurationMinutes, TimeUnit.MINUTES))
               .option("checkpointLocation", _checkPointLocation)
-              .option("path", _dbName + "." + _tgtTblName)
-              .start
+              .option("fanout-enabled", "true")
+              .toTable(_dbName + "." + _tgtTblName)
               .awaitTermination
 
         } catch {
             case ex: Exception =>
-                System.out.println(ex.printStackTrace())
+                println(ex.printStackTrace())
         } finally {
             spark.stop()
         }
