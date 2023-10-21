@@ -1,3 +1,9 @@
+/*
+* Author : Anand
+* Date : 17-Oct-2023
+* Description: Struct Generator
+*/
+
 package com.bigdatalabs.stable.utils
 
 import org.apache.spark.sql.SparkSession
@@ -13,7 +19,7 @@ class generateSchema {
 
         val spark = SparkSession.builder
           .master("local[*]") //"spark://localhost:7077"
-          .appName("struct Generator")
+          .appName("data frame struct generator utility")
           .getOrCreate()
 
         //Fetch Property File Path from Input Parameter
