@@ -1,5 +1,10 @@
-package com.bigdatalabs.stable.utils
+/*
+* Author : Anand
+* Date : 17-Oct-2023
+* Description: generic spark query module
+*/
 
+package com.bigdatalabs.stable.utils
 import org.apache.spark.sql.SparkSession
 
 object sparkExecuteSQLStatement{
@@ -46,9 +51,8 @@ object sparkExecuteSQLStatement{
       println("Done")
 
     } catch {
-      case ex : Exception => {
+      case ex : Exception =>
         println(ex.printStackTrace())
-      }
     } finally {
       spark.stop()
     }
