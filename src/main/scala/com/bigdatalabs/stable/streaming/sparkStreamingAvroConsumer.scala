@@ -92,17 +92,17 @@ object sparkStreamingAvroConsumer {
         _delimiterChar = _configMap("delimiterChar")
         _quoteChar = _configMap("quoteChar")
 
-        System.out.println("brokers :" + _brokers)
-        System.out.println("subsTopic :" + _subsTopic)
-        System.out.println("srcSchemaFile :" + _srcSchemaFile)
-        System.out.println("avroSchemaFile :" + _avroSchemaFile)
-        System.out.println("tgtSchemaFile :" + _tgtSchemaFile)
-        System.out.println("pubsTopic :" + _pubsTopic)
-        System.out.println("groupId :" + _groupId)
-        System.out.println("microbatchSecs :" + _microbatchSecs)
-        System.out.println("lineSplitterChar :" + _lineSplitterChar)
-        System.out.println("delimiterChar :" + _delimiterChar)
-        System.out.println("quoteChar :" + _quoteChar)
+        println("brokers :" + _brokers)
+        println("subsTopic :" + _subsTopic)
+        println("srcSchemaFile :" + _srcSchemaFile)
+        println("avroSchemaFile :" + _avroSchemaFile)
+        println("tgtSchemaFile :" + _tgtSchemaFile)
+        println("pubsTopic :" + _pubsTopic)
+        println("groupId :" + _groupId)
+        println("microbatchSecs :" + _microbatchSecs)
+        println("lineSplitterChar :" + _lineSplitterChar)
+        println("delimiterChar :" + _delimiterChar)
+        println("quoteChar :" + _quoteChar)
 
         //Read from JSON Message Stream
         val df_stream = spark
