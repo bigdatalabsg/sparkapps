@@ -128,8 +128,8 @@ object sparkStreamingAvroConsumer {
         df_from_avro.writeStream
           .format("console")
           .outputMode("append")
-          .option("mode", "PERMISSIVE")
-          .option("truncate", false)
+          .option("mode", value="PERMISSIVE")
+          .option("truncate", value = false)
           .start()
           .awaitTermination()
     }
