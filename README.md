@@ -22,7 +22,7 @@
 #### _Usage : spark-submit --class com.bigdatalabs.stable.streaming.sparkStreamIcebergSink sparkapps-<version>.jar [config file path/config file name]_
 
 
-### **4. sparkBatchWithPartitionIcebergSink - Batch Ingestion for Iceberg Partitioned Tables**
+### **4. sparkBatchIcebergPartitionSink - Batch Ingestion for Iceberg Partitioned Tables**
 
 
 #### _Usage : spark-submit --class com.bigdatalabs.stable.streaming.sparkStreamPartitionIcebergSink sparkapps-<version>.jar [config file path/config file name]_
@@ -51,7 +51,7 @@
 #### _Usage : spark-submit --class com.bigdatalabs.stable.streaming.sparkStreamIcebergSink sparkapps-<version>.jar [config file path/config file name]_
 
 
-### **9. sparkStreamPartitionIcebergSink.scala - Streaming Ingestion for Iceberg Partitioned Tables**
+### **9. sparkStreamIcebergPartitionSink.scala - Streaming Ingestion for Iceberg Partitioned Tables**
 
 
 #### _Usage : spark-submit --class com.bigdatalabs.stable.streaming.sparkStreamPartitionIcebergSink sparkapps-<version>.jar [config file path/config file name]_
