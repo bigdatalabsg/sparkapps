@@ -5,11 +5,10 @@ import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.types._
 import org.apache.spark.sql.functions._
 
-
 import java.io.{FileNotFoundException, IOException}
 import scala.io.{BufferedSource, Source}
 
-object sparkBatchWithPartitionIcebergSink {
+object sparkBatchIcebergPartitionSink {
 
     def main(args: Array[String]): Unit = {
 
@@ -23,11 +22,11 @@ object sparkBatchWithPartitionIcebergSink {
         var _headerFlag: String = null
         var _delimiter: String = null
         var _quoteChar: String = null
-        var _tgtSchemaFile: String =null
+        var _tgtSchemaFile: String = null
 
         var _dbName: String = null
         var _tgtTblName: String = null
-        var _partitionColumnSeq: Seq [String]   = null //Sequence of partition Columns in Correct Order
+        var _partitionColSeq: Seq[String] = null //Sequence of partition Columns in Correct Order
 
         var _SQL: String = null
 
@@ -69,7 +68,7 @@ object sparkBatchWithPartitionIcebergSink {
             case ex: IOException =>
                 println(ex.printStackTrace())
                 System.exit(2)
-           }
+        }
 
         //Read Application Config
         val _configMap = _configFile.getLines().filter(line => line.contains("::")).map { line =>
@@ -96,9 +95,9 @@ object sparkBatchWithPartitionIcebergSink {
         _tgtTblName = _configMap("tgtTblName")
 
         //Partition Column Set
-        _partitionColumnSeq = _configMap("partitionColumnSeq").split(",").toSeq
+        _partitionColSeq = _configMap("partitionColSeq").split(",").toSeq
 
-        if(_partitionColumnSeq==null) {
+        if (_partitionColSeq == null) {
             println("Partition Columns Not Defined - Exiting")
             System.exit(3)
         }
@@ -117,7 +116,7 @@ object sparkBatchWithPartitionIcebergSink {
         //_srcSchema.printTreeString()
 
         //Read from Files
-        val df_src= spark.read.format(_fileFormat)
+        val df_src = spark.read.format(_fileFormat)
           .schema(_srcSchema)
           .option("inferSchema", _inferSchemaFlag)
           .option("header", _headerFlag)
@@ -126,24 +125,27 @@ object sparkBatchWithPartitionIcebergSink {
           .load(_srcFileName)
           .toDF()
 
+        //        df_src.printSchema()
+
+
         //df_raw.printSchema()
         System.out.println("Loading Data to Target")
 
         //Create Temp table
         df_src.cache()
-        df_src.createOrReplaceTempView(viewName="genericTempTable")
+        df_src.createOrReplaceTempView(viewName = "genericTempTable")
 
         val df_tgt = spark.sql(_SQL.stripMargin)
 
         //Determine Partition Columns
-        val _partColumns = _partitionColumnSeq
-        val _partColumnNames = _partColumns.map(_colName=>col(_colName))
+        val _partColumns = _partitionColSeq
+        val _partColumnNames = _partColumns.map(_colName => col(_colName))
 
         try {
             println(s"""Start Loading Iceberg""")
             //Append new Data
             df_tgt
-              .sortWithinPartitions(_partColumnNames:_*)
+              .sortWithinPartitions(_partColumnNames: _*)
               .writeTo(_dbName + "." + _tgtTblName)
               .append()
 
