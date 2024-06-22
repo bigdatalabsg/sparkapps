@@ -2,9 +2,9 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.bigdatalabs</groupId>
   <artifactId>sparkapps</artifactId>
-  <version>20231021</version>
+  <version>202406</version>
   <name>${project.artifactId}</name>
-  <description>spark scala apps on scala 2.12.15 and spark 3.3.1</description>
+  <description>spark scala apps on scala 2.12.15 and spark 3.5.1</description>
   <inceptionYear>2023</inceptionYear>
 
   <properties>
@@ -16,11 +16,10 @@
     <maven.build.timestamp.format>yyyyMMdd</maven.build.timestamp.format>
     <appversion>${timestamp}</appversion>
     <scala.binary.version>2.12</scala.binary.version>
-    <scala.version>2.12.15</scala.version>
-    <spark.version>3.3.1</spark.version>
-    <iceberg.version>1.4.0</iceberg.version>
+    <scala.version>2.12.18</scala.version>
+    <spark.version>3.5.1</spark.version>
+    <iceberg.version>1.5.2</iceberg.version>
   </properties>
-
   <dependencies>
 
     <!-- https://mvnrepository.com/artifact/org.scala-lang/scala-library -->
@@ -99,7 +98,6 @@
       <artifactId>iceberg-core</artifactId>
       <version>${iceberg.version}</version>
     </dependency>
-
   </dependencies>
 
   <build>
@@ -118,6 +116,7 @@
             </goals>
             <configuration>
               <args>
+                <arg>-deprecation</arg>
                 <arg>-dependencyfile</arg>
                 <arg>${project.build.directory}/.scala_dependencies</arg>
               </args>
