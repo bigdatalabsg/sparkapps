@@ -6,7 +6,8 @@ package com.bigdatalabs.stable.streaming
 * Description: Structured Streaming AVRO Consumer
 */
 
-import com.bigdatalabs.stable.utils.{configGenerator, prepareSQL, schemaGenerator}
+import com.bigdatalabs.stable.utils.{configGenerator, preparedStatementGenerator, schemaGenerator}
+
 import org.apache.spark.sql._
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.streaming.Trigger
@@ -20,7 +21,7 @@ object sparkStreamIcebergPartitionSink {
 
     //Variables
     var _configParams: Map[String, String] = null
-    var _checkPointLocation: String =null
+    var _checkPointLocation: String = null
 
     var _brokers: String = null
     var _subsTopic: String = null
@@ -31,7 +32,7 @@ object sparkStreamIcebergPartitionSink {
     var _dbName: String = null
     var _tgtTblName: String = null
     var _partitionCol: String = null
-    var _partitionColSeq: Seq[String] =null
+    var _partitionColSeq: Seq[String] = null
 
     //SQL Block
     var _SQLFilePath: String = null
@@ -74,7 +75,7 @@ object sparkStreamIcebergPartitionSink {
     _tgtTblName = _configParams("tgtTblName")
     _partitionCol = _configParams("partitionCol")
 
-    _checkPointLocation = _configParams("checkPointLocation")
+    _checkPointLocation = _configParams("checkPointLocation") + this.getClass.getName.dropRight(1) + "-" + (System.currentTimeMillis() / 1000)
 
     print("=============================================================================================================\n")
     println("SPARK SERVICE NAME:" + this.getClass.getName.toUpperCase().dropRight(1))
@@ -97,14 +98,14 @@ object sparkStreamIcebergPartitionSink {
     print("=============================================================================================================\n")
 
     //Generate Source Schema
-    val _msgSchema: StructType = new schemaGenerator().getStruct(_srcSchemaFile)
+    val _msgSchema: StructType = new schemaGenerator().getSchema(_srcSchemaFile)
 
     if (_msgSchema == null) {
       println("Undefined Schema - Exiting")
       System.exit(10)
     }
 
-    _SQLStmt = new prepareSQL().getSQLStatement(_SQLFilePath)
+    _SQLStmt = new preparedStatementGenerator().getStatement(_SQLFilePath)
 
     if (_SQLStmt == null) {
       println("Undefined SQL - Exiting")
@@ -133,13 +134,10 @@ object sparkStreamIcebergPartitionSink {
       df_streaming
         .selectExpr("CAST(value AS STRING)")
         .select(from_json(col("value"), _msgSchema).as("data")).select("data.*")
-        .createOrReplaceTempView(viewName="genericTempStreamingView")
+        .createOrReplaceTempView(viewName = "genericTempStreamingView")
 
       //Target
       val df_tgt = spark.sql(_SQLStmt)
-
-      //Check Point
-      _checkPointLocation += "/" + this.getClass.getName + (System.currentTimeMillis() / 1000)
 
       //Write Stream
       df_tgt.writeStream
