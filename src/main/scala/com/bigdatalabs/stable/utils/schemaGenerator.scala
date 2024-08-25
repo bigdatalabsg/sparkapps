@@ -1,44 +1,25 @@
+package com.bigdatalabs.stable.utils
+
 /*
 * Author : Anand
 * Date : 17-Oct-2023
 * Description: Struct Generator
 */
 
-package com.bigdatalabs.stable.utils
-
-import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.types._
+import org.apache.spark.sql.SparkSession
 
-import java.io.{FileNotFoundException, IOException}
+class schemaGenerator {
 
-class generateSchema {
-
-    def getStruct(args: String): StructType = {
+    def getSchema(args: String): StructType = {
 
         var _schema: StructType = null
+        val _schemaFile = args //Fetch Property File Path from Input Parameter
 
         val spark = SparkSession.builder
           .master("local[*]") //"spark://localhost:7077"
           .appName("data frame struct generator utility")
           .getOrCreate()
-
-        //Fetch Property File Path from Input Parameter
-        val _schemaFile = args
-
-        //Check for Propoerties File
-        try {
-            print("=======================================================================\n")
-            println("SCHEMA FILE:" + _schemaFile)
-            print("=======================================================================\n")
-        } catch {
-            case ex: FileNotFoundException =>
-                println(ex.printStackTrace())
-                System.exit(1)
-
-            case ex: IOException =>
-                println(ex.printStackTrace())
-                System.exit(2)
-        }
 
         //Infer Schema, Split the String [<Column Name> : <Data Type> ] at ":"
         def _inferType(field: String) = field.split(":")(1) match {
@@ -48,7 +29,7 @@ class generateSchema {
             case "long" => LongType
             case "float" => FloatType
             case "double" => DoubleType
-            //case "decimal" => DecimalType
+            //case "decimal" => org.apache.spark.sql.types.DecimalType
             case "string" => StringType
             case "binary" => BinaryType
             case "boolean" => BooleanType
@@ -80,7 +61,8 @@ class generateSchema {
         }
 
         //Return Struct Type Object
-        return _schema
+        _schema
 
     }
+
 }

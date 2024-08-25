@@ -32,7 +32,7 @@ class configGenerator {
 
     _configFile.close()
 
-    //return
+    //return config Maps
     _configMap
 
   }
