@@ -62,9 +62,10 @@ object sparkStreamIcebergSink {
         _brokers = _configParams("brokers")
         _subsTopic = _configParams("subsTopic")
         _offSet = _configParams("offSet")
-        _srcSchemaFile = _configParams("srcSchemaFile")
         _triggerDurationMinutes = _configParams("triggerDurationMins").toInt
         _checkPointLocation = _configParams("checkPointLocation") + this.getClass.getName.dropRight(1)+ "-" + (System.currentTimeMillis() / 1000)
+
+        _srcSchemaFile = _configParams("srcSchemaFile")
 
         _dbName = _configParams("dbName")
         _tgtTblName = _configParams("tgtTblName")

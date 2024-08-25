@@ -34,9 +34,9 @@ object sparkStreamIcebergPartitionSink {
     var _partitionCol: String = null
     var _partitionColSeq: Seq[String] = null
 
-    //SQL Block
-    var _SQLFilePath: String = null
-    var _SQLStmt: String = null
+    //Prepared Statement Block
+    var _preparedStatementFilePath: String=null
+    var _preparedStatement:String=null
 
     //Session
     val spark: SparkSession = SparkSession.builder
@@ -69,11 +69,13 @@ object sparkStreamIcebergPartitionSink {
     _triggerDurationMinutes = _configParams("triggerDurationMinutes").toInt
 
     _srcSchemaFile = _configParams("srcSchemaFile")
-    _SQLFilePath = _configParams("SQLFilePath")
 
     _dbName = _configParams("dbName")
     _tgtTblName = _configParams("tgtTblName")
     _partitionCol = _configParams("partitionCol")
+
+    _preparedStatementFilePath = _configParams("SQLFilePath")
+
 
     _checkPointLocation = _configParams("checkPointLocation") + this.getClass.getName.dropRight(1) + "-" + (System.currentTimeMillis() / 1000)
 
@@ -82,7 +84,7 @@ object sparkStreamIcebergPartitionSink {
     print("=============================================================================================================\n")
     println("RESOURCE FILE:" + _prop_file_path)
     print("=============================================================================================================\n")
-    println("SQL FILE:" + _SQLFilePath)
+    println("PREPARED STATEMENT FILE:" + _preparedStatementFilePath)
     print("=============================================================================================================\n")
     println("SCHEMA FILE :" + _srcSchemaFile)
     print("=============================================================================================================\n")
@@ -105,11 +107,12 @@ object sparkStreamIcebergPartitionSink {
       System.exit(10)
     }
 
-    _SQLStmt = new preparedStatementGenerator().getStatement(_SQLFilePath)
+    //Fetch Prepared Statement
+    _preparedStatement = new preparedStatementGenerator().getStatement(_preparedStatementFilePath)
 
-    if (_SQLStmt == null) {
-      println("Undefined SQL - Exiting")
-      System.exit(10)
+    if (_preparedStatement == null) {
+      println("Undefined Prepared Statement - Exiting")
+      System.exit(4)
     }
 
     //Partition Column Set
@@ -137,7 +140,7 @@ object sparkStreamIcebergPartitionSink {
         .createOrReplaceTempView(viewName = "genericTempStreamingView")
 
       //Target
-      val df_tgt = spark.sql(_SQLStmt)
+      val df_tgt = spark.sql(_preparedStatement.stripMargin)
 
       //Write Stream
       df_tgt.writeStream

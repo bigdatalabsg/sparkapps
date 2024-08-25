@@ -10,6 +10,8 @@ import com.bigdatalabs.stable.utils.{configGenerator, preparedStatementGenerator
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.types._
 
+import scala.io.Source
+
 object sparkBatchIcebergSink {
 
   def main(args: Array[String]): Unit = {
@@ -28,10 +30,9 @@ object sparkBatchIcebergSink {
     var _dbName: String = null
     var _tgtTblName: String = null
 
-    //SQL Block
-    var _SQLFilePath: String = null
-    var _SQLStmt: String = null
-
+    //Prepared Statement Block
+    var _preparedStatementFilePath: String=null
+    var _preparedStatement:String=null
 
     //Session
     val spark = SparkSession.builder
@@ -78,7 +79,7 @@ object sparkBatchIcebergSink {
     _dbName = _configParams("dbName")
     _tgtTblName = _configParams("tgtTblName")
 
-    _SQLFilePath = _configParams("SQLFilePath")
+    _preparedStatementFilePath = _configParams("SQLFilePath")
 
     //Check for Properties File
     print("=============================================================================================================\n")
@@ -86,7 +87,7 @@ object sparkBatchIcebergSink {
     print("=============================================================================================================\n")
     println("RESOURCE FILE:" + _prop_file_path)
     print("=============================================================================================================\n")
-    println("SQL FILE:" + _SQLFilePath)
+    println("PREPARED STATEMENT FILE:" + _preparedStatementFilePath)
     print("=============================================================================================================\n")
     println("SCHEMA FILE :" + _srcSchemaFile)
     print("============================================= SERVICE PARAMETERS ============================================\n")
@@ -103,11 +104,11 @@ object sparkBatchIcebergSink {
       System.exit(4)
     }
 
-    //Fetch SQL
-    _SQLStmt = new preparedStatementGenerator().getStatement(_SQLFilePath)
+    //Fetch Prepared Statement
+    _preparedStatement = new preparedStatementGenerator().getStatement(_preparedStatementFilePath)
 
-    if (_SQLStmt == null) {
-      println("Undefined SQL - Exiting")
+    if (_preparedStatement == null) {
+      println("Undefined Prepared Statement - Exiting")
       System.exit(4)
     }
 
@@ -123,7 +124,7 @@ object sparkBatchIcebergSink {
       .toDF().createOrReplaceTempView("genericTempView")
 
     //Work Table
-    val df_work = spark.sql(_SQLStmt.stripMargin)
+    val df_work = spark.sql(_preparedStatement.stripMargin)
 
     try {
       println(s"Start Loading Iceberg")

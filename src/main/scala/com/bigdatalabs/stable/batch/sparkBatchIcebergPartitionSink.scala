@@ -25,9 +25,9 @@ object sparkBatchIcebergPartitionSink {
     var _partitionCol: String = null //Comma Sep partition Columns in Correct Order
     var _partitionColSeq: Seq[String] = null //Sequence of partition Columns in Correct Order
 
-    //SQL Block
-    var _SQLFilePath: String = null
-    var _SQLStmt: String = null
+    //Prepared Statement Block
+    var _preparedStatementFilePath: String=null
+    var _preparedStatement:String=null
 
     //Session
     val spark = SparkSession.builder
@@ -73,14 +73,14 @@ object sparkBatchIcebergPartitionSink {
     _tgtTblName = _configParams("tgtTblName")
     _partitionCol = _configParams("partitionCol")
 
-    _SQLFilePath = _configParams("SQLFilePath")
+    _preparedStatementFilePath = _configParams("SQLFilePath")
 
     print("=============================================================================================================\n")
     println("SPARK SERVICE NAME:" + this.getClass.getName.toUpperCase().dropRight(1))
     print("=============================================================================================================\n")
     println("RESOURCE FILE:" + _prop_file_path)
     print("=============================================================================================================\n")
-    println("SQL FILE:" + _SQLFilePath)
+    println("PREPARED STATEMENT FILE:" + _preparedStatementFilePath)
     print("=============================================================================================================\n")
     println("SCHEMA FILE :" + _srcSchemaFile)
     print("============================================= SERVICE PARAMETERS ============================================\n")
@@ -98,11 +98,11 @@ object sparkBatchIcebergPartitionSink {
       System.exit(4)
     }
 
-    //Fetch SQL
-    _SQLStmt = new preparedStatementGenerator().getStatement(_SQLFilePath)
+    //Fetch Prepared Statement
+    _preparedStatement = new preparedStatementGenerator().getStatement(_preparedStatementFilePath)
 
-    if (_SQLStmt == null) {
-      println("Undefined SQL - Exiting")
+    if (_preparedStatement == null) {
+      println("Undefined Prepared Statement - Exiting")
       System.exit(4)
     }
 
@@ -123,11 +123,7 @@ object sparkBatchIcebergPartitionSink {
       .load(_srcFileName)
       .toDF().createOrReplaceTempView(viewName = "genericTempView")
 
-    val df_tgt = spark.sql(_SQLStmt)
-
-    //Debug
-    System.out.println(df_tgt.show(10))
-    System.exit(100)
+    val df_tgt = spark.sql(_preparedStatement.stripMargin)
 
     //Determine Partition Columns
     val _partColumns = _partitionColSeq
