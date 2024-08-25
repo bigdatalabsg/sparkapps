@@ -8,23 +8,20 @@ Date : 17/10/2023
 
 package com.bigdatalabs.stable.streaming
 
-import com.bigdatalabs.stable.utils.generateSchema
-
+import com.bigdatalabs.stable.utils.{configGenerator, schemaGenerator}
 import org.apache.spark.sql._
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.streaming.Trigger
 import org.apache.spark.sql.types._
 
-import java.io.{FileNotFoundException, IOException}
 import java.util.concurrent.TimeUnit
-import scala.io.{BufferedSource, Source}
 
 object sparkStreamIcebergSink {
 
     def main(args: Array[String]): Unit = {
 
         //Variables
-        var _configFile: BufferedSource = null
+        var _configParams: Map[String, String] = null
 
         var _brokers: String = null
         var _subsTopic: String = null
@@ -32,11 +29,10 @@ object sparkStreamIcebergSink {
         var _offSet: String = null
         var _triggerDurationMinutes: Int = 0
 
+        var _checkPointLocation: String = null
+
         var _dbName: String = null
         var _tgtTblName: String = null
-        var _partitionCol: String = null
-
-        var _SQL: String = null
 
         //Session
         val spark = SparkSession.builder
@@ -48,44 +44,30 @@ object sparkStreamIcebergSink {
         spark.sparkContext.setLogLevel("WARN")
 
         //Fetch Property File Path from Input Parameter
-        val _prop_file_path = args(0)
+        val _prop_file_path: String = args(0)
 
-        //Check for Properties File
-        try {
-            println("=======================================================================\n")
-            println("SPARK SERVICE NAME:" + this.getClass.getName.toUpperCase())
-            println("=======================================================================\n")
-            println("RESOURCE FILE:" + _prop_file_path)
-
-            _configFile = Source.fromFile(_prop_file_path)
-
-        } catch {
-            case ex: FileNotFoundException =>
-                println(ex.printStackTrace())
-                System.exit(1)
-            case ex: IOException =>
-                println(ex.printStackTrace())
-                System.exit(2)
+        if (_prop_file_path == null) {
+            println("Property File Not Found - Exiting")
+            System.exit(4)
         }
 
-        //Read Application Config
-        val _configMap = _configFile.getLines().filter(line => line.contains("::")).map { line =>
-            val _configTokens = line.split("::")
-            if (_configTokens.size == 1) {
-                _configTokens(0) -> ""
-            } else {
-                _configTokens(0) -> _configTokens(1)
-            }
-        }.toMap
+        //Check for Properties File
+        _configParams = new configGenerator().getParams(_prop_file_path)
 
-        _brokers = _configMap("brokers")
-        _subsTopic = _configMap("subsTopic")
-        _offSet = _configMap("offSet")
-        _srcSchemaFile = _configMap("srcSchemaFile")
-        _triggerDurationMinutes = _configMap("triggerDurationMins").toInt
+        if (_configParams == null) {
+            println("Check Configuration File - Exiting")
+            System.exit(1)
+        }
 
-        _dbName = _configMap("dbName")
-        _tgtTblName = _configMap("tgtTblName")
+        _brokers = _configParams("brokers")
+        _subsTopic = _configParams("subsTopic")
+        _offSet = _configParams("offSet")
+        _srcSchemaFile = _configParams("srcSchemaFile")
+        _triggerDurationMinutes = _configParams("triggerDurationMins").toInt
+        _checkPointLocation = _configParams("checkPointLocation") + this.getClass.getName.dropRight(1)+ "-" + (System.currentTimeMillis() / 1000)
+
+        _dbName = _configParams("dbName")
+        _tgtTblName = _configParams("tgtTblName")
 
         print("SERVICE PARAMETERS==================================================\n")
         println("brokers :" + _brokers)
@@ -99,7 +81,7 @@ object sparkStreamIcebergSink {
         print("====================================================================\n")
 
         //Generate Schema
-        val _msgSchema: StructType = new generateSchema().getStruct(_srcSchemaFile)
+        val _msgSchema: StructType = new schemaGenerator().getSchema(_srcSchemaFile)
 
         if (_msgSchema == null) {
             println("Undefined Schema - Exiting")
@@ -112,6 +94,7 @@ object sparkStreamIcebergSink {
               .option("kafka.bootstrap.servers", _brokers)
               .option("subscribe", _subsTopic)
               .option("startingOffsets", _offSet)
+              .option("failOnDataLoss", value = false)
               .load()
 
             //Read Value and Convert to String
@@ -121,9 +104,6 @@ object sparkStreamIcebergSink {
               .select(from_json(col("value"), _msgSchema)
                 .as(alias="data"))
               .select(col="data.*")
-
-            val _checkPointLocation = "/tmp/spark_kafka_chkpnt/" +
-              "streaming/" + this.getClass.getName + (System.currentTimeMillis() / 1000)
 
             df_tgt.writeStream
               .format(source="iceberg")
