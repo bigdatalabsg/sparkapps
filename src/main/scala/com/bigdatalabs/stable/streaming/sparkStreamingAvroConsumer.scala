@@ -6,12 +6,10 @@
 
 package com.bigdatalabs.stable.streaming
 
-import com.bigdatalabs.stable.utils.configGenerator
+import com.bigdatalabs.stable.utils.{avroSchemaGenerator, configGenerator}
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.avro.functions.from_avro
 import org.apache.spark.sql.functions.col
-
-import java.nio.file.{Files, Paths}
 
 object sparkStreamingAvroConsumer {
 
@@ -66,9 +64,10 @@ object sparkStreamingAvroConsumer {
     _tgtSchemaFile = _configParams("tgtSchemaFile")
 
     //Fetch AVRO schema
-    val _avroSchema = new String(
-      Files.readAllBytes(Paths.get(_avroSchemaFile)))
+    //val _avroSchema:String = new String(
+      //Files.readAllBytes(Paths.get(_avroSchemaFile)))
 
+    val _avroSchema: String = new avroSchemaGenerator().returnAvroSchema(_avroSchemaFile)
 
     print("=============================================================================================================\n")
     println("SPARK SERVICE NAME:" + this.getClass.getName.toUpperCase().dropRight(1))
@@ -95,8 +94,8 @@ object sparkStreamingAvroConsumer {
 
     //Inspect Schema
     //df_stream.printSchema()
-
     val df_from_avro = df_stream.select(
+      //from_avro(col("value"), _avroSchema).alias("data")
       from_avro(col("value"), _avroSchema).alias("data")
     ).select("data.*")
 
