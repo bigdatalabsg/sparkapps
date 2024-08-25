@@ -1,6 +1,6 @@
 package com.bigdatalabs.stable.batch
 
-import com.bigdatalabs.stable.utils.{configGenerator, prepareSQL, schemaGenerator}
+import com.bigdatalabs.stable.utils.{configGenerator, preparedStatementGenerator, schemaGenerator}
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types._
@@ -75,22 +75,22 @@ object sparkBatchIcebergPartitionSink {
 
     _SQLFilePath = _configParams("SQLFilePath")
 
-    println("=======================================================================\n")
-    println("SPARK SERVICE NAME: " + this.getClass.getName.toUpperCase().dropRight(1))
-    print("=========================================================================\n")
-    println("RESOURCE FILE: " + _prop_file_path)
-    print("=========================================================================\n")
-    println("SQL FILE: " + _SQLFilePath)
-    print("=========================================================================\n")
-    println("SCHEMA FILE: " + _srcSchemaFile)
-    print("SERVICE PARAMETERS:======================================================\n")
-    println("dbName : " + _dbName)
-    println("tgtTblName : " + _tgtTblName)
+    print("=============================================================================================================\n")
+    println("SPARK SERVICE NAME:" + this.getClass.getName.toUpperCase().dropRight(1))
+    print("=============================================================================================================\n")
+    println("RESOURCE FILE:" + _prop_file_path)
+    print("=============================================================================================================\n")
+    println("SQL FILE:" + _SQLFilePath)
+    print("=============================================================================================================\n")
+    println("SCHEMA FILE :" + _srcSchemaFile)
+    print("============================================= SERVICE PARAMETERS ============================================\n")
+    println("dbName :" + _dbName)
+    println("tgtTblName :" + _tgtTblName)
     println("partitionCol : " + _partitionCol)
-    print("=========================================================================\n")
+    print("=============================================================================================================\n")
 
     //Generate Schema
-    val _srcSchema: StructType = new schemaGenerator().getStruct(_srcSchemaFile)
+    val _srcSchema: StructType = new schemaGenerator().getSchema(_srcSchemaFile)
 
     //Check Schema
     if (_srcSchema == null) {
@@ -99,7 +99,7 @@ object sparkBatchIcebergPartitionSink {
     }
 
     //Fetch SQL
-    _SQLStmt = new prepareSQL().getSQLStatement(_SQLFilePath)
+    _SQLStmt = new preparedStatementGenerator().getStatement(_SQLFilePath)
 
     if (_SQLStmt == null) {
       println("Undefined SQL - Exiting")
@@ -114,7 +114,6 @@ object sparkBatchIcebergPartitionSink {
       System.exit(4)
     }
 
-
     //Read from Files
     spark.read.format(_fileFormat)
       .schema(schema = _srcSchema)
@@ -127,8 +126,8 @@ object sparkBatchIcebergPartitionSink {
     val df_tgt = spark.sql(_SQLStmt)
 
     //Debug
-    //System.out.println(df_tgt.show(10))
-    //System.exit(100)
+    System.out.println(df_tgt.show(10))
+    System.exit(100)
 
     //Determine Partition Columns
     val _partColumns = _partitionColSeq
