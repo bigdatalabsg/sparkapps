@@ -20,7 +20,7 @@ class avroSchemaGenerator {
       _schemaFile.close()
 
       if (_avroSchema == null) {
-        println("Undefined SQL - Exiting")
+        println("Schema File Undefined-Exiting")
         System.exit(1)
       }
 
