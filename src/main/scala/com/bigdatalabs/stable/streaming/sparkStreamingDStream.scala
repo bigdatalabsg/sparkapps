@@ -6,21 +6,19 @@ package com.bigdatalabs.stable.streaming
 * Description: Generic Streaming Data Template for Microbatch
 */
 
-import com.bigdatalabs.stable.utils.generateSchema
-
-import scala.io.{BufferedSource, Source}
-import java.io.{FileNotFoundException, IOException}
-
+import com.bigdatalabs.utils.schemaGenerator
+import org.apache.kafka.clients.consumer.ConsumerConfig
+import org.apache.kafka.common.serialization.StringDeserializer
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types._
-
-import org.apache.kafka.clients.consumer.ConsumerConfig
-import org.apache.kafka.common.serialization.StringDeserializer
 import org.apache.spark.streaming.kafka010.{ConsumerStrategies, KafkaUtils, LocationStrategies}
 import org.apache.spark.streaming.{Seconds, StreamingContext}
 
-object sparkStreamingMicroBatch extends Serializable {
+import java.io.{FileNotFoundException, IOException}
+import scala.io.{BufferedSource, Source}
+
+object sparkStreamingDStream extends Serializable {
 
     def main(args: Array[String]): Unit = {
 
@@ -93,7 +91,7 @@ object sparkStreamingMicroBatch extends Serializable {
         _quoteChar = _configMap("quoteChar")
 
         //WHY?
-        val topicsSet : Set[String] = _subsTopic.split(",").toSet
+        val topicsSet: Set[String] = _subsTopic.split(",").toSet
         //Set Streaming Context and Latency
         val ssc = new StreamingContext(spark.sparkContext, Seconds(_microbatchSecs))
 
@@ -110,7 +108,7 @@ object sparkStreamingMicroBatch extends Serializable {
             ConsumerStrategies.Subscribe[String, String](topicsSet, kafkaParams))
 
         //Generate Schema from Schema Generation Class
-        val _msgSchema: StructType = new generateSchema().getStruct(_msgSchemaFile)
+        val _msgSchema: StructType = new schemaGenerator().getSchema(_msgSchemaFile)
 
         if (_msgSchema == null) {
             System.out.println("Bad Schema - Exiting")
