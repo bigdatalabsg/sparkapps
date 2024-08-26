@@ -6,13 +6,13 @@ package com.bigdatalabs.stable.batch
 * Description: Generic Streaming Data Template for Microbatch
 */
 
-import com.bigdatalabs.stable.utils.generateSchema
+import com.bigdatalabs.utils.schemaGenerator
 import org.apache.spark.sql.SparkSession
 
 import java.io.{FileNotFoundException, IOException}
 import scala.io.{BufferedSource, Source}
 
-object sparkBatchSinkHDFS {
+object sparkBatchSinkHDFSORC {
 
     def main(args: Array[String]): Unit = {
 
@@ -85,7 +85,7 @@ object sparkBatchSinkHDFS {
           .getOrCreate()
 
         //Generate Schema from Schema Generation Class
-        val _srcSchema = new generateSchema().getStruct(_schemaFile)
+        val _srcSchema = new schemaGenerator().getSchema(_schemaFile)
 
         if (_srcSchema == null) {
             System.out.println("Bad Schema - Exiting")
