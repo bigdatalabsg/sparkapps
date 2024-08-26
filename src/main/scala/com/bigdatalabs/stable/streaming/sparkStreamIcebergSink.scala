@@ -8,7 +8,7 @@ Date : 17/10/2023
 
 package com.bigdatalabs.stable.streaming
 
-import com.bigdatalabs.stable.utils.{configGenerator, schemaGenerator}
+import com.bigdatalabs.stable.utils.{configGenerator, preparedStatementGenerator, schemaGenerator}
 import org.apache.spark.sql._
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.streaming.Trigger
@@ -33,6 +33,11 @@ object sparkStreamIcebergSink {
 
         var _dbName: String = null
         var _tgtTblName: String = null
+
+        //Prepared Statement Block
+        var _preparedStatementFile: String=null
+        var _preparedStatement:String=null
+
 
         //Session
         val spark = SparkSession.builder
@@ -63,12 +68,15 @@ object sparkStreamIcebergSink {
         _subsTopic = _configParams("subsTopic")
         _offSet = _configParams("offSet")
         _triggerDurationMinutes = _configParams("triggerDurationMins").toInt
+
         _checkPointLocation = _configParams("checkPointLocation") + this.getClass.getName.dropRight(1)+ "-" + (System.currentTimeMillis() / 1000)
 
         _srcSchemaFile = _configParams("srcSchemaFile")
 
         _dbName = _configParams("dbName")
         _tgtTblName = _configParams("tgtTblName")
+
+        _preparedStatementFile = _configParams("preparedStatementFile")
 
         print("SERVICE PARAMETERS==================================================\n")
         println("brokers :" + _brokers)
@@ -89,8 +97,17 @@ object sparkStreamIcebergSink {
             System.exit(3)
         }
 
+        //Fetch Prepared Statement
+        _preparedStatement = new preparedStatementGenerator().getStatement(_preparedStatementFile)
+
+        if (_preparedStatement == null) {
+            println("Undefined Prepared Statement - Exiting")
+            System.exit(4)
+        }
+
         try {
-            val df_value = spark.readStream
+
+            val df_streaming = spark.readStream
               .format(source="kafka")
               .option("kafka.bootstrap.servers", _brokers)
               .option("subscribe", _subsTopic)
@@ -99,13 +116,14 @@ object sparkStreamIcebergSink {
               .load()
 
             //Read Value and Convert to String
-            val df_streaming = df_value.selectExpr("CAST(value AS STRING)")
+            df_streaming.selectExpr("CAST(value AS STRING)")
+              .select(from_json(col("value"), _msgSchema).as(alias="data")).select(col="data.*")
+              .createOrReplaceTempView(viewName = "genericTempStreamingView")
 
-            val df_tgt = df_streaming
-              .select(from_json(col("value"), _msgSchema)
-                .as(alias="data"))
-              .select(col="data.*")
+            //Target
+            val df_tgt = spark.sql(_preparedStatement.stripMargin)
 
+            //
             df_tgt.writeStream
               .format(source="iceberg")
               .outputMode(outputMode="append")

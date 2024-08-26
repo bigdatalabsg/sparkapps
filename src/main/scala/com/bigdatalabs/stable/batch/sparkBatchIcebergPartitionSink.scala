@@ -26,7 +26,7 @@ object sparkBatchIcebergPartitionSink {
     var _partitionColSeq: Seq[String] = null //Sequence of partition Columns in Correct Order
 
     //Prepared Statement Block
-    var _preparedStatementFilePath: String=null
+    var _preparedStatementFile: String=null
     var _preparedStatement:String=null
 
     //Session
@@ -73,14 +73,14 @@ object sparkBatchIcebergPartitionSink {
     _tgtTblName = _configParams("tgtTblName")
     _partitionCol = _configParams("partitionCol")
 
-    _preparedStatementFilePath = _configParams("SQLFilePath")
+    _preparedStatementFile = _configParams("preparedStatementFile")
 
     print("=============================================================================================================\n")
     println("SPARK SERVICE NAME:" + this.getClass.getName.toUpperCase().dropRight(1))
     print("=============================================================================================================\n")
     println("RESOURCE FILE:" + _prop_file_path)
     print("=============================================================================================================\n")
-    println("PREPARED STATEMENT FILE:" + _preparedStatementFilePath)
+    println("PREPARED STATEMENT FILE:" + _preparedStatementFile)
     print("=============================================================================================================\n")
     println("SCHEMA FILE :" + _srcSchemaFile)
     print("============================================= SERVICE PARAMETERS ============================================\n")
@@ -99,7 +99,7 @@ object sparkBatchIcebergPartitionSink {
     }
 
     //Fetch Prepared Statement
-    _preparedStatement = new preparedStatementGenerator().getStatement(_preparedStatementFilePath)
+    _preparedStatement = new preparedStatementGenerator().getStatement(_preparedStatementFile)
 
     if (_preparedStatement == null) {
       println("Undefined Prepared Statement - Exiting")

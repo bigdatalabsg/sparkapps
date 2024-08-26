@@ -35,7 +35,7 @@ object sparkStreamIcebergPartitionSink {
     var _partitionColSeq: Seq[String] = null
 
     //Prepared Statement Block
-    var _preparedStatementFilePath: String=null
+    var _preparedStatementFile: String=null
     var _preparedStatement:String=null
 
     //Session
@@ -74,7 +74,7 @@ object sparkStreamIcebergPartitionSink {
     _tgtTblName = _configParams("tgtTblName")
     _partitionCol = _configParams("partitionCol")
 
-    _preparedStatementFilePath = _configParams("SQLFilePath")
+    _preparedStatementFile = _configParams("preparedStatementFile")
 
 
     _checkPointLocation = _configParams("checkPointLocation") + this.getClass.getName.dropRight(1) + "-" + (System.currentTimeMillis() / 1000)
@@ -84,7 +84,7 @@ object sparkStreamIcebergPartitionSink {
     print("=============================================================================================================\n")
     println("RESOURCE FILE:" + _prop_file_path)
     print("=============================================================================================================\n")
-    println("PREPARED STATEMENT FILE:" + _preparedStatementFilePath)
+    println("PREPARED STATEMENT FILE:" + _preparedStatementFile)
     print("=============================================================================================================\n")
     println("SCHEMA FILE :" + _srcSchemaFile)
     print("=============================================================================================================\n")
@@ -108,7 +108,7 @@ object sparkStreamIcebergPartitionSink {
     }
 
     //Fetch Prepared Statement
-    _preparedStatement = new preparedStatementGenerator().getStatement(_preparedStatementFilePath)
+    _preparedStatement = new preparedStatementGenerator().getStatement(_preparedStatementFile)
 
     if (_preparedStatement == null) {
       println("Undefined Prepared Statement - Exiting")

@@ -31,7 +31,7 @@ object sparkBatchIcebergSink {
     var _tgtTblName: String = null
 
     //Prepared Statement Block
-    var _preparedStatementFilePath: String=null
+    var _preparedStatementFile: String=null
     var _preparedStatement:String=null
 
     //Session
@@ -79,7 +79,7 @@ object sparkBatchIcebergSink {
     _dbName = _configParams("dbName")
     _tgtTblName = _configParams("tgtTblName")
 
-    _preparedStatementFilePath = _configParams("SQLFilePath")
+    _preparedStatementFile = _configParams("preparedStatementFile")
 
     //Check for Properties File
     print("=============================================================================================================\n")
@@ -87,7 +87,7 @@ object sparkBatchIcebergSink {
     print("=============================================================================================================\n")
     println("RESOURCE FILE:" + _prop_file_path)
     print("=============================================================================================================\n")
-    println("PREPARED STATEMENT FILE:" + _preparedStatementFilePath)
+    println("PREPARED STATEMENT FILE:" + _preparedStatementFile)
     print("=============================================================================================================\n")
     println("SCHEMA FILE :" + _srcSchemaFile)
     print("============================================= SERVICE PARAMETERS ============================================\n")
@@ -105,7 +105,7 @@ object sparkBatchIcebergSink {
     }
 
     //Fetch Prepared Statement
-    _preparedStatement = new preparedStatementGenerator().getStatement(_preparedStatementFilePath)
+    _preparedStatement = new preparedStatementGenerator().getStatement(_preparedStatementFile)
 
     if (_preparedStatement == null) {
       println("Undefined Prepared Statement - Exiting")
