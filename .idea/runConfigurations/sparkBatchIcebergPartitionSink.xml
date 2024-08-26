@@ -1,9 +1,9 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="sparkStreamingAvroConsumer" type="Application" factoryName="Application">
+  <configuration default="false" name="sparkBatchIcebergPartitionSink" type="Application" factoryName="Application">
     <option name="INCLUDE_PROVIDED_SCOPE" value="true" />
-    <option name="MAIN_CLASS_NAME" value="com.bigdatalabs.stable.streaming.sparkStreamingAvroConsumer" />
+    <option name="MAIN_CLASS_NAME" value="com.bigdatalabs.stable.batch.sparkBatchIcebergPartitionSink" />
     <module name="sparkapps" />
-    <option name="PROGRAM_PARAMETERS" value="$PROJECT_DIR$/configs/sparkStreamingAvroConsumer.cfg" />
+    <option name="PROGRAM_PARAMETERS" value="$PROJECT_DIR$/configs/sbips_flightdata.cfg" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="com.bigdatalabs.stable.streaming.*" />

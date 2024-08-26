@@ -3,7 +3,13 @@
     <option name="INCLUDE_PROVIDED_SCOPE" value="true" />
     <option name="MAIN_CLASS_NAME" value="com.bigdatalabs.stable.batch.sparkBatchIcebergSink" />
     <module name="sparkapps" />
-    <option name="PROGRAM_PARAMETERS" value="$PROJECT_DIR$/configs/sparkBatchIcebergSink.cfg" />
+    <option name="PROGRAM_PARAMETERS" value="$PROJECT_DIR$/configs/sbis_flightdata.cfg" />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="com.bigdatalabs.stable.streaming.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
     <method v="2">
       <option name="Make" enabled="true" />
     </method>
