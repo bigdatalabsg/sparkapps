@@ -8,7 +8,7 @@ Date : 17/10/2023
 
 package com.bigdatalabs.stable.streaming
 
-import com.bigdatalabs.stable.utils.{configGenerator, preparedStatementGenerator, schemaGenerator}
+import com.bigdatalabs.utils.{configGenerator, preparedStatementGenerator, schemaGenerator}
 import org.apache.spark.sql._
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.streaming.Trigger

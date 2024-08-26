@@ -6,7 +6,7 @@ package com.bigdatalabs.stable.streaming
 * Description: Structured Streaming
 */
 
-import com.bigdatalabs.stable.utils.{configGenerator, schemaGenerator}
+import com.bigdatalabs.utils.{configGenerator, schemaGenerator}
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.avro.functions._
 import org.apache.spark.sql.functions._

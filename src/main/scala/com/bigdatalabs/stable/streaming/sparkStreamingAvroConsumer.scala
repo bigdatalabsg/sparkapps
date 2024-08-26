@@ -6,7 +6,7 @@
 
 package com.bigdatalabs.stable.streaming
 
-import com.bigdatalabs.stable.utils.{avroSchemaGenerator, configGenerator}
+import com.bigdatalabs.utils.{avroSchemaGenerator, configGenerator}
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.avro.functions.from_avro
 import org.apache.spark.sql.functions.col

@@ -6,7 +6,7 @@ package com.bigdatalabs.stable.streaming
 * Description: Structured Streaming AVRO Consumer
 */
 
-import com.bigdatalabs.stable.utils.{configGenerator, preparedStatementGenerator, schemaGenerator}
+import com.bigdatalabs.utils.{configGenerator, preparedStatementGenerator, schemaGenerator}
 
 import org.apache.spark.sql._
 import org.apache.spark.sql.functions._
