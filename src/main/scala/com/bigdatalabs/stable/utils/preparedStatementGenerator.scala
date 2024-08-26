@@ -12,21 +12,19 @@ class preparedStatementGenerator {
   def getStatement(args: String): String = {
 
     //Fetch Property File Path from Input Parameter
-    val _preparedStatementFilePath = args
-
+    val _preparedStatementFilePath:String = args
     var _preparedStatementFile: Source=null
     var _preparedStatement:String=null
 
     try {
 
       _preparedStatementFile = Source.fromFile(_preparedStatementFilePath.trim)
-
       _preparedStatement = _preparedStatementFile.getLines().mkString.trim
 
       _preparedStatementFile.close()
 
       if (_preparedStatement == null) {
-        println("Undefined SQL - Exiting")
+        println("Undefined Prepared Statement - Exiting")
         System.exit(1)
       }
 

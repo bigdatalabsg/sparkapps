@@ -11,10 +11,10 @@ class runIcebergMaintenance {
       .appName("iceberg-maintenance-rewrite-manifest")
       .getOrCreate()
 
-    val SQL = "CALL" + _catalogName + ".system.rewrite_data_files(" + _dbName + "." + _tgtTblName + ")"
+    val _preparedStatement = "CALL" + _catalogName + ".system.rewrite_data_files(" + _dbName + "." + _tgtTblName + ")"
 
     try {
-      spark.sql(SQL)
+      spark.sql(_preparedStatement)
     } catch {
       case ex: Exception =>
         println(ex.printStackTrace())
@@ -34,10 +34,10 @@ class runIcebergMaintenance {
       .appName("iceberg-maintenance-rewrite-manifest")
       .getOrCreate()
 
-    val SQL = "CALL" + _catalogName + ".system.rewrite_datafiles(" + _dbName + "." + _tgtTblName + ")"
+    val _preparedStatement = "CALL" + _catalogName + ".system.rewrite_datafiles(" + _dbName + "." + _tgtTblName + ")"
 
     try {
-      spark.sql(SQL)
+      spark.sql(_preparedStatement)
     } catch {
       case ex: Exception =>
         println(ex.printStackTrace())
