@@ -6,7 +6,7 @@
 
 package com.bigdatalabs.stable.batch
 
-import com.bigdatalabs.stable.utils.{configGenerator, preparedStatementGenerator, schemaGenerator}
+import com.bigdatalabs.utils.{configGenerator, preparedStatementGenerator, schemaGenerator}
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.types._
 
