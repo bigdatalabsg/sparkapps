@@ -1,4 +1,5 @@
-package com.bigdatalabs.stable.utils
+package com.bigdatalabs.utils
+
 /*
 * Author : Anand
 * Date : 10-Aug-2024

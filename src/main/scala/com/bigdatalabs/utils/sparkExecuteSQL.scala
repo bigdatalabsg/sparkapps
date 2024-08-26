@@ -4,7 +4,8 @@
 * Description: generic spark query module
 */
 
-package com.bigdatalabs.stable.utils
+package com.bigdatalabs.utils
+
 import org.apache.spark.sql.SparkSession
 
 object sparkExecuteSQL{
