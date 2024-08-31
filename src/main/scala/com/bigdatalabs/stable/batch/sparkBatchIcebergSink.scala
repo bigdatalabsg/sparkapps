@@ -10,8 +10,6 @@ import com.bigdatalabs.utils.{configGenerator, preparedStatementGenerator, schem
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.types._
 
-import scala.io.Source
-
 object sparkBatchIcebergSink {
 
   def main(args: Array[String]): Unit = {
@@ -46,7 +44,7 @@ object sparkBatchIcebergSink {
     if (args.length < 1) {
       System.err.println(
         s"""
-           |Usage: --resourcefile <file path>
+           |Usage: --resourceFile <file path>
                 """.stripMargin)
       System.exit(1)
     }
