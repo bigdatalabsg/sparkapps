@@ -22,19 +22,17 @@ class preparedStatementGenerator {
       _preparedStatementFile = Source.fromFile(_preparedStatementFilePath.trim)
       _preparedStatement = _preparedStatementFile.getLines().mkString.trim
 
-      _preparedStatementFile.close()
-
       if (_preparedStatement == null) {
         println("Undefined Prepared Statement - Exiting")
         System.exit(1)
       }
-
     } catch {
       case ex: Exception =>
         System.out.println(ex.printStackTrace())
         System.exit(2)
+    } finally {
+      _preparedStatementFile.close()
     }
-
     //Return
     _preparedStatement
   }
