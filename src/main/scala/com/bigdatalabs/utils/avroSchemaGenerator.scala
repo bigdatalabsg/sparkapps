@@ -16,8 +16,10 @@ class avroSchemaGenerator {
     try {
 
       _schemaFile = Source.fromFile(_avroSchemaFilePath.trim)
+
       _avroSchema = _schemaFile.getLines().mkString.trim
-      _schemaFile.close()
+
+      //      _schemaFile.close()
 
       if (_avroSchema == null) {
         println("Schema File Undefined-Exiting")
@@ -28,6 +30,9 @@ class avroSchemaGenerator {
       case ex: Exception =>
         System.out.println(ex.printStackTrace())
         System.exit(2)
+    }
+    finally {
+      _schemaFile.close()
     }
 
     //Return
