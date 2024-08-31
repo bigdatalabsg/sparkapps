@@ -63,10 +63,6 @@ object sparkStreamingAvroConsumer {
     _avroSchemaFile = _configParams("avroSchemaFile")
     _tgtSchemaFile = _configParams("tgtSchemaFile")
 
-    //Fetch AVRO schema
-    //val _avroSchema:String = new String(
-      //Files.readAllBytes(Paths.get(_avroSchemaFile)))
-
     val _avroSchema: String = new avroSchemaGenerator().returnAvroSchema(_avroSchemaFile)
 
     print("=============================================================================================================\n")
@@ -95,7 +91,6 @@ object sparkStreamingAvroConsumer {
     //Inspect Schema
     //df_stream.printSchema()
     val df_from_avro = df_stream.select(
-      //from_avro(col("value"), _avroSchema).alias("data")
       from_avro(col("value"), _avroSchema).alias("data")
     ).select("data.*")
 
