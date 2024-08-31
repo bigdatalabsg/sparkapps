@@ -13,6 +13,10 @@ class runIcebergMaintenance {
 
     val _preparedStatement = "CALL" + _catalogName + ".system.rewrite_data_files(" + _dbName + "." + _tgtTblName + ")"
 
+
+    val tbl =
+
+
     try {
       spark.sql(_preparedStatement)
     } catch {
