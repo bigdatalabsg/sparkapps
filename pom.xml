@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.bigdatalabs</groupId>
   <artifactId>sparkapps</artifactId>
-  <version>202408_26</version>
+  <version>202408_28</version>
   <name>${project.artifactId}</name>
   <description>spark scala apps on scala 2.12.15 and spark 3.5.1</description>
   <inceptionYear>2023</inceptionYear>
