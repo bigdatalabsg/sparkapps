@@ -3,6 +3,12 @@ package com.bigdatalabs.stable.batch
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions._
 
+/*
+* Author : Anand
+* Date : 15-May-2024
+* Description: CDC Delta processing for iceberg
+*/
+
 object sparkCDCDelta {
     def main(args: Array[String]): Unit = {
 
