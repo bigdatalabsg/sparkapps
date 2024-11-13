@@ -1,5 +1,12 @@
 package com.bigdatalabs.stable.batch
 
+/*
+* Author : Anand
+* Date : 13-June-2024
+* Description: Batch Partition
+*/
+
+
 import com.bigdatalabs.utils.{configGenerator, preparedStatementGenerator, schemaGenerator}
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions._
@@ -60,6 +67,7 @@ object sparkBatchIcebergPartitionSink {
       println("Check Configuration File - Exiting")
       System.exit(1)
     }
+
     //Parameters
     _srcFileName = _configParams("srcFileName")
     _fileFormat = _configParams("fileFormat")
